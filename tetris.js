@@ -1,4 +1,4 @@
-//canvasとcontextの取得
+//canvasとcontextの取得&canvasの大きさ設定
 let canvas = document.getElementById("canvas");
 let context = canvas.getContext("2d");
 
@@ -58,8 +58,30 @@ class Mino {
     }
 }
 
+class Field {
+    //col(列：横に何個入るか), row(行：縦に何個入るか)
+    static Col = 10;
+    static Row = 20;
+
+    //canvasの長さ = 行の長さ(列の長さ) * 1ブロックの大きさ
+    static canvasW = Field.Col * Block.size;
+    static canvasH = Field.Row * Block.size;
+
+    //canvasのwidthとheightを決める関数
+    static makeCanvas(){
+        canvas.width = Field.canvasW;
+        canvas.height = Field.canvasH;
+    }
+}
+
+    
+
+
+
 
 //ここから記述
+//canvasの大きさを決定
+Field.makeCanvas()
 
 //blockを表示
 let block1 = new Block(7,4);
@@ -69,3 +91,10 @@ new Block(3,8).draw()
 //Minoを表示
 let mino1 = new Mino(4,10);
 mino1.draw()
+
+let mino2 = new Mino(8,0);
+mino2.draw()
+
+
+
+
