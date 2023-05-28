@@ -24,6 +24,11 @@ class Block {
 }
 
 class Mino {
+    constructor(x, y){
+        this.x = x;
+        this.y = y;
+    }
+
     //Minoの各長さ
     static size = 4;
 
@@ -35,14 +40,18 @@ class Mino {
     ]
 
     //tatroを描写
-    static draw(){
+    draw(){
         for (let y = 0; y < Mino.size; y++){
             for(let x = 0; x < Mino.size; x++){
+
+                let tetroX = (this.x + x) * Block.size;
+                let tetroY = (this.y + y) * Block.size;
+
                 if(Mino.tetro[y][x]==1){
                     context.fillStyle = "rgb(0, 0, 255)";
-                    context.fillRect(x * Block.size, y * Block.size, Block.size, Block.size);
+                    context.fillRect(tetroX, tetroY, Block.size, Block.size);
                     context.strokeStyle="rgb(0, 0, 0)";
-                    context.strokeRect(x * Block.size, y * Block.size, Block.size, Block.size);
+                    context.strokeRect(tetroX, tetroY, Block.size, Block.size);
                 }
             }
         }
@@ -58,5 +67,5 @@ block1.draw();
 new Block(3,8).draw()
 
 //Minoを表示
-Mino.draw();
-
+let mino1 = new Mino(4,10);
+mino1.draw()
