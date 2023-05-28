@@ -6,7 +6,7 @@ let context = canvas.getContext("2d");
 //各クラス
 class Block {
     //ブロック1マスのサイズ(px)
-    static size = 30;
+    static size = 29;
 
     //block1つの座標
     constructor(x, y){
