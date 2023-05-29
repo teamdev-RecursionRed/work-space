@@ -30,18 +30,73 @@ class Mino {
     constructor(x, y){
         this.x = x;
         this.y = y;
-        this.tetro = Mino.tetro;
+        this.tetro = Mino.minos[Math.floor(Math.random() * Mino.minos.length)];
     }
 
     //Minoの各長さ
     static size = 4;
 
+    /*
     static tetro = [//試しにz型のみ
         [1,1,0,0],
         [0,1,1,0],
         [0,0,0,0],
         [0,0,0,0]
     ]
+    */
+
+    static minos =
+    [
+      [
+        [0, 1, 0, 0],
+        [1, 1, 1, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ],
+      
+      [
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 1, 0]
+      ],
+    
+      [
+        [1, 0, 0, 0],
+        [1, 1, 1, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ],
+    
+      [
+        [0, 0, 1, 0],
+        [1, 1, 1, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ],
+    
+      [
+        [1, 1, 0, 0],
+        [1, 1, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ],
+    
+      [
+        [1, 1, 0, 0],
+        [0, 1, 1, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ],
+    
+      [
+        [0, 1, 1, 0],
+        [1, 1, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ]
+    ];
+
 
     //tatroを描写
     draw(){
@@ -58,78 +113,6 @@ class Mino {
                     context.strokeRect(tetroX, tetroY, Block.size, Block.size);
                 }
             }
-        }
-    }
-
-    rotate() {
-        const rotatedMatrix = rotateMatrix(this.tetro);
-        const center = calculateCenterOfGravity(this.tetro);
-        const centerAfterRotation = calculateCenterOfGravity(rotatedMatrix);
-    
-        const shiftX = center[0] - centerAfterRotation[0];
-        const shiftY = center[1] - centerAfterRotation[1];
-        const shiftedMatrix = shiftMatrix(rotatedMatrix, shiftX, shiftY);
-        this.tetro = shiftedMatrix;
-        // return shiftedMatrix;
-
-        function calculateCenterOfGravity(matrix) {
-            // 重心位置を返す関数
-            let totalWeight = 0;
-            let xSum = 0;
-            let ySum = 0;
-          
-            for (let i = 0; i < matrix.length; i++) {
-              for (let j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j] === 1) {
-                  totalWeight++;
-                  xSum += j;
-                  ySum += i;
-                }
-              }
-            }
-          
-            const centerX = Math.round(xSum / totalWeight);
-            const centerY = Math.round(ySum / totalWeight);
-            return [centerX, centerY];
-              
-        }
-
-        function rotateMatrix(matrix) {
-            // 転置して、逆順にすれば90°回転を利用
-            const size = matrix.length;
-            const rotated = [];
-          
-            for (let i = 0; i < size; i++) {
-              const newRow = [];
-              for (let j = size - 1; j >= 0; j--) {
-                newRow.push(matrix[j][i]);
-              }
-              rotated.push(newRow);
-            }
-            return rotated;
-        }
-
-        function shiftMatrix(matrix, shiftX, shiftY) {
-            // 1を持つ要素を(shiftX, shiftY)分　シフトする
-            const shifted = [...matrix].map(row => [...row]);
-            const rows = shifted.length;
-            const cols = shifted[0].length;
-          
-            for (let i = 0; i < rows; i++) {
-              for (let j = 0; j < cols; j++) {
-                if (matrix[i][j] === 1) {
-                    shifted[i][j] = 0;
-                    if ( 
-                        i + shiftY >= 0 && 
-                        i + shiftY < rows && 
-                        j + shiftX >= 0 && 
-                        j + shiftX < cols
-                    ) 
-                        shifted[i + shiftY][j + shiftX] = 1;
-                }
-              }
-            }
-            return shifted;
         }
     }
 }
