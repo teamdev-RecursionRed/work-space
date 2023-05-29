@@ -32,20 +32,15 @@ class Mino {
         this.y = y;
     }
 
-    //Minoの各長さ
-    static size = 4;
-
     static tetro = [//試しにz型のみ
-        [0,0,0,0],
-        [1,1,0,0],
-        [0,1,1,0],
-        [0,0,0,0]
+        [1,1,0],
+        [0,1,1],
     ]
 
     //tatroを描写
     draw(){
-        for (let y = 0; y < Mino.size; y++){
-            for(let x = 0; x < Mino.size; x++){
+        for (let y = 0; y < Mino.tetro.length; y++){
+            for(let x = 0; x < Mino.tetro[y].length; x++){
 
                 let tetroX = (this.x + x) * Block.size;
                 let tetroY = (this.y + y) * Block.size;
@@ -86,20 +81,40 @@ class Field {
 //canvasの大きさを決定
 Field.makeCanvas()
 
-//blockを表示
-let block1 = new Block(7,4);
-block1.draw();
-new Block(3,8).draw()
 
-//Minoを表示
-let mino1 = new Mino(4,10);
-mino1.draw()
+let currentPosition = 0; 
+let lastTime = 0;
+const interval = 1000; // 1秒ごとに描画するための間隔(ms)
 
-let mino2 = new Mino(8,0);
-mino2.draw()
+function drawBlock(){
+  let mino = new Mino(4, currentPosition);
+  mino.draw();
+  if (currentPosition < Field.Row-1)
+    currentPosition++;
+  else
+    currentPosition = 0;
+  delete mino;
+}
 
+function drawBoard(){
+  for (let x = 0; x < Field.Col; x++){
+    for (let y = 0; y < Field.Row; y++){
+      context.fillStyle = "white";
+      context.fillRect(x * Block.size, y * Block.size, Block.size, Block.size);
+    }
+  }
+}
 
+function drawGame() {
+  const deltaTime = Date.now() - lastTime;
 
+  if (deltaTime > interval) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawBoard();
+    drawBlock();
+    lastTime = Date.now();
+  }
+  requestAnimationFrame(drawGame);
+}
 
-console.log(Block.windowH);
-console.log(Block.size);
+drawGame();
