@@ -5,9 +5,10 @@ let context = canvas.getContext("2d");
 
 //各クラス
 class Block {
-    //ブロック1マスのサイズ(px)
-    static size = 30;
-
+    //ブロック1マスのサイズ(px)をwindow.heightによってブロックのサイズを決定します
+    static windowH = window.innerHeight;
+    static size = (Block.windowH > 768) ? 28 : 25;
+    
     //block1つの座標
     constructor(x, y){
         this.x = x;
@@ -21,6 +22,8 @@ class Block {
         context.strokeStyle="rgb(0, 0, 0)";
         context.strokeRect(this.x * Block.size, this.y * Block.size, Block.size, Block.size);
     }
+    
+
 }
 
 class Mino {
@@ -98,3 +101,5 @@ mino2.draw()
 
 
 
+console.log(Block.windowH);
+console.log(Block.size);
