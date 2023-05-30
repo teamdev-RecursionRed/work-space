@@ -110,7 +110,6 @@ class Mino {
         this.y += dy;
     }
 
-    
     rotate() {
         this.tetro = this.tetro[0].map((_, index) => this.tetro.map(row => row[index])).reverse();
     }
