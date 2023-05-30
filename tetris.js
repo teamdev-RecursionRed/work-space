@@ -37,60 +37,47 @@ class Mino {
 
     static tetros = [
       [
-          [0, 0, 0, 0],
-          [0, 1, 1, 0],
-          [0, 0, 1, 1],
-          [0, 0, 0, 0]
+          [1, 1, 0],
+          [0, 1, 1]
       ],
       
       [
-          [0, 0, 0, 0],
           [1, 1, 1, 0],
-          [0, 1, 0, 0],
-          [0, 0, 0, 0]
+          [0, 1, 0, 0]
         ],
         
         [
-          [0, 0, 1, 0],
-          [0, 0, 1, 0],
-          [0, 0, 1, 0],
-          [0, 0, 1, 0]
+          [1],
+          [1],
+          [1],
+          [1]
         ],
         
         [
-          [0, 0, 0, 0],
-          [0, 1, 1, 1],
-          [0, 1, 0, 0],
-          [0, 0, 0, 0]
+          [1, 1, 1],
+          [1, 0, 0]
         ],
         
         [
-          [0, 0, 0, 0],
-          [1, 1, 1, 0],
-          [0, 0, 1, 0],
-          [0, 0, 0, 0]
+          [1, 1, 1],
+          [0, 0, 1]
         ],
         
         [
-          [0, 0, 0, 0],
-          [0, 1, 1, 0],
-          [0, 1, 1, 0],
-          [0, 0, 0, 0]
+          [1, 1],
+          [1, 1]
         ],
 
         [
-          [0, 0, 0, 0],
-          [0, 0, 1, 1],
-          [0, 1, 1, 0],
-          [0, 0, 0, 0]
+          [0, 1, 1],
+          [1, 1, 0]
         ]
       ];
 
-
     //tatroを描写
     draw(){
-        for (let y = 0; y < Mino.size; y++){
-            for(let x = 0; x < Mino.size; x++){
+      for (let y = 0; y < this.tetro.length; y++){
+        for(let x = 0; x < this.tetro[0].length; x++){
 
                 let tetroX = (this.x + x) * Block.size;
                 let tetroY = (this.y + y) * Block.size;
@@ -111,7 +98,8 @@ class Mino {
     }
 
     rotate() {
-        this.tetro = this.tetro[0].map((_, index) => this.tetro.map(row => row[index])).reverse();
+        const matrix = this.tetro[0].map((_, index) => this.tetro.map(row => row[index])).reverse();
+        this.tetro = matrix;
     }
     
 }
