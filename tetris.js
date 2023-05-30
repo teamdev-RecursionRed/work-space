@@ -112,13 +112,7 @@ class Mino {
 
     
     rotate() {
-        const array = this.tetro;
-        let rotatedArray = array[0].map((_, index) => array.map(row => row[index])).reverse();
-      
-        this.x += Math.round((this.tetro[0].length - this.tetro.length) / 2);
-        this.y += Math.round((this.tetro.length - this.tetro[0].length) / 2);
-        this.tetro = rotatedArray;
-
+        this.tetro = this.tetro[0].map((_, index) => this.tetro.map(row => row[index])).reverse();
     }
     
 }
