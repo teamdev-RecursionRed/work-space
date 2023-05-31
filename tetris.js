@@ -198,20 +198,20 @@ drawGame();
 //キーボードの矢印キー入力に応じてミノの移動や回転を制御
 document.addEventListener('keydown', (e) => {
     switch (e.key) {
-          case 'ArrowUp':
-            tetro.rotate();
-            break;
-          case 'ArrowRight':
-            tetro.move(1, 0);
-            break;
-          case 'ArrowLeft':
-            tetro.move(-1, 0);
-            break;
-          case 'ArrowDown':
-            tetro.move(0, 1);
-            break;
-          default:
-            break;
+        case 'ArrowUp':
+          tetro.rotate();
+          break;
+        case 'ArrowRight':
+          tetro.move(1, 0);
+          break;
+        case 'ArrowLeft':
+          tetro.move(-1, 0);
+          break;
+        case 'ArrowDown':
+          tetro.move(0, 1);
+          break;
+        default:
+          break;
     }
 });
 
