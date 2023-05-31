@@ -42,42 +42,36 @@ class Mino {
           [0, 1, 1, 0],
           [0, 0, 0, 0],
         ],
-      
         [
           [0, 0, 0, 0],
-          [1, 1, 1, 0],
           [0, 1, 0, 0],
+          [1, 1, 1, 0],
           [0, 0, 0, 0],
         ],
-        
         [
           [0, 0, 0, 0],
           [1, 1, 1, 1],
           [0, 0, 0, 0],
           [0, 0, 0, 0],
         ],
-        
         [
           [0, 0, 0, 0],
           [0, 1, 1, 1],
           [0, 1, 0, 0],
           [0, 0, 0, 0],
         ],
-        
         [
           [0, 0, 0, 0],
           [1, 1, 1, 0],
           [0, 0, 1, 0],
           [0, 0, 0, 0],
         ],
-        
         [
           [0, 0, 0, 0],
           [0, 1, 1, 0],
           [0, 1, 1, 0],
           [0, 0, 0, 0],
         ],
-
         [
           [0, 0, 0, 0],
           [0, 0, 1, 1],
@@ -112,12 +106,14 @@ class Mino {
 
                     // 範囲外アクセスまたは他のブロックとの衝突をチェック
                     if (newX < 0 || newX >= Field.Col || newY >= Field.Row) {
-                        return true; // 衝突がある場合はtrueを返す
+                        // 衝突がある場合はtrueを返す
+                        return true;
                     }
                 }
             }
         }
-        return false; // 衝突がない場合はfalseを返す
+        // 衝突がない場合はfalseを返す
+        return false;
     }
     
     move(dx, dy){
@@ -126,12 +122,22 @@ class Mino {
             this.y += dy;
         }
     }
-
     rotate() {
         const preMatrix = this.tetro;
         this.tetro = this.tetro[0].map((_, index) => this.tetro.map(row => row[index])).reverse();
+
         if (this.checkCollision(0, 0)) {
+            // 衝突がある場合は回転前の状態に戻す
             this.tetro = preMatrix;
+        }
+        else {
+            // 回転後のミノが範囲外に出る場合は位置を調整する
+            while (this.x + this.tetro[0].length > Field.Col) {
+              this.move(-1, 0);
+        }
+            while (this.y + this.tetro.length > Field.Row) {
+              this.move(0, -1);
+            }
         }
     }
 }
@@ -163,47 +169,51 @@ class Field {
 
 //canvasの大きさを決定
 Field.makeCanvas();
-let tetro = new Mino(3, -1);
 
+// 描画間隔(ms)
+const interval = 700;
 let lastTime = 0;
-const interval = 1000; // 1秒ごとに描画するための間隔(ms)
+let tetro = new Mino(3, -1);
 
 function drawGame() {
   const currentTime = Date.now();
   const deltaTime = currentTime - lastTime;
 
   if (deltaTime > interval) {
+    //キャンバスをクリアしフィールドとミノを描画
+    //tetro.move(0, 1); によりミノを下に移動
     context.clearRect(0, 0, canvas.width, canvas.height);
     Field.draw();
     tetro.draw();
     tetro.move(0, 1);
     lastTime = currentTime;
   }
+  //requestAnimationFrame を使用して連続的に描画を更新
   requestAnimationFrame(drawGame);
 }
 
+//ゲームスタート
 drawGame();
 
+//キーボードの矢印キー入力に応じてミノの移動や回転を制御
 document.addEventListener('keydown', (e) => {
-  e.preventDefault();
-  switch (e.key) {
-    case 'ArrowUp':
-      tetro.rotate();
-      break;
-    case 'ArrowRight':
-      tetro.move(1, 0);
-      break;
-    case 'ArrowLeft':
-      tetro.move(-1, 0);
-      break;
-    case 'ArrowDown':
-      tetro.move(0, 1);
-      break;
-    default:
-      break;
-  }
+    switch (e.key) {
+          case 'ArrowUp':
+            tetro.rotate();
+            break;
+          case 'ArrowRight':
+            tetro.move(1, 0);
+            break;
+          case 'ArrowLeft':
+            tetro.move(-1, 0);
+            break;
+          case 'ArrowDown':
+            tetro.move(0, 1);
+            break;
+          default:
+            break;
+    }
 });
-
 
 
 //ボタンで動かす。
