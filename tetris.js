@@ -36,49 +36,54 @@ class Mino {
     static size = 4;
 
     static tetros = [
-      [
-          [1, 1, 0],
-          [0, 1, 1]
-      ],
-      
-      [
+        [
+          [0, 0, 0, 0],
+          [1, 1, 0, 0],
+          [0, 1, 1, 0],
+          [0, 0, 0, 0],
+        ],
+        [
+          [0, 0, 0, 0],
+          [0, 1, 0, 0],
           [1, 1, 1, 0],
-          [0, 1, 0, 0]
+          [0, 0, 0, 0],
         ],
-        
         [
-          [1],
-          [1],
-          [1],
-          [1]
+          [0, 0, 0, 0],
+          [1, 1, 1, 1],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
         ],
-        
         [
-          [1, 1, 1],
-          [1, 0, 0]
+          [0, 0, 0, 0],
+          [0, 1, 1, 1],
+          [0, 1, 0, 0],
+          [0, 0, 0, 0],
         ],
-        
         [
-          [1, 1, 1],
-          [0, 0, 1]
+          [0, 0, 0, 0],
+          [1, 1, 1, 0],
+          [0, 0, 1, 0],
+          [0, 0, 0, 0],
         ],
-        
         [
-          [1, 1],
-          [1, 1]
+          [0, 0, 0, 0],
+          [0, 1, 1, 0],
+          [0, 1, 1, 0],
+          [0, 0, 0, 0],
         ],
-
         [
-          [0, 1, 1],
-          [1, 1, 0]
+          [0, 0, 0, 0],
+          [0, 0, 1, 1],
+          [0, 1, 1, 0],
+          [0, 0, 0, 0],
         ]
       ];
 
     //tatroを描写
     draw(){
-      for (let y = 0; y < this.tetro.length; y++){
-        for(let x = 0; x < this.tetro[0].length; x++){
-
+        for (let y = 0; y < this.tetro.length; y++){
+            for(let x = 0; x < this.tetro[0].length; x++){
                 let tetroX = (this.x + x) * Block.size;
                 let tetroY = (this.y + y) * Block.size;
 
@@ -92,16 +97,49 @@ class Mino {
         }
     }
 
-    move(dx, dy){
-        this.x += dx;
-        this.y += dy;
-    }
+    checkCollision(dx, dy) {
+        for (let y = 0; y < this.tetro.length; y++) {
+            for (let x = 0; x < this.tetro[y].length; x++) {
+                if (this.tetro[y][x]) {
+                    const newX = this.x + x + dx;
+                    const newY = this.y + y + dy;
 
-    rotate() {
-        const matrix = this.tetro[0].map((_, index) => this.tetro.map(row => row[index])).reverse();
-        this.tetro = matrix;
+                    // 範囲外アクセスまたは他のブロックとの衝突をチェック
+                    if (newX < 0 || newX >= Field.Col || newY >= Field.Row) {
+                        // 衝突がある場合はtrueを返す
+                        return true;
+                    }
+                }
+            }
+        }
+        // 衝突がない場合はfalseを返す
+        return false;
     }
     
+    move(dx, dy){
+        if (!this.checkCollision(dx, dy)){
+            this.x += dx;
+            this.y += dy;
+        }
+    }
+    rotate() {
+        const preMatrix = this.tetro;
+        this.tetro = this.tetro[0].map((_, index) => this.tetro.map(row => row[index])).reverse();
+
+        if (this.checkCollision(0, 0)) {
+            // 衝突がある場合は回転前の状態に戻す
+            this.tetro = preMatrix;
+        }
+        else {
+            // 回転後のミノが範囲外に出る場合は位置を調整する
+            while (this.x + this.tetro[0].length > Field.Col) {
+              this.move(-1, 0);
+        }
+            while (this.y + this.tetro.length > Field.Row) {
+              this.move(0, -1);
+            }
+        }
+    }
 }
 
 class Field {
@@ -119,110 +157,84 @@ class Field {
         canvas.height = Field.canvasH;
     }
 
-    constructor() {
-        this.field = this.createField();
-    }
-
-    createField() {
-        const field = [];
-        for (let y = 0; y < Field.Row; y++) {
-          const row = [];
-          for (let x = 0; x < Field.Col; x++) {
-            row.push(0);
-          }
-          field.push(row);
-        }
-        return field;
-    }
-
-
-
-    draw() {
-        for (let y = 0; y < Field.Row; y++) {
-          for (let x = 0; x < Field.Col; x++) {
-            if (this.field[y][x] === 1) {
-              const block = new Block(x, y);
-              block.draw();
-            }
-          }
+    static draw(){
+      for (let x = 0; x < Field.Col; x++){
+        for (let y = 0; y < Field.Row; y++){
+          context.fillStyle = "white";
+          context.fillRect(x * Block.size, y * Block.size, Block.size, Block.size);
         }
       }
-      
+    }
 }
 
-
-
-
-
-
-
-//ここから記述                                                                            //ボタンで動かす。
 //canvasの大きさを決定
-Field.makeCanvas()
+Field.makeCanvas();
 
-    // main
-    let field = new Field();
-    let mino4 = new Mino(3, 7);
+// 描画間隔(ms)
+const interval = 700;
+let lastTime = 0;
+let tetro = new Mino(3, -1);
 
-    // 描写
-    function draw(){
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        field.draw();
-        mino4.draw();
+function drawGame() {
+  const currentTime = Date.now();
+  const deltaTime = currentTime - lastTime;
+
+  if (deltaTime > interval) {
+    //キャンバスをクリアしフィールドとミノを描画
+    //tetro.move(0, 1); によりミノを下に移動
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    Field.draw();
+    tetro.draw();
+    tetro.move(0, 1);
+    lastTime = currentTime;
+  }
+  //requestAnimationFrame を使用して連続的に描画を更新
+  requestAnimationFrame(drawGame);
+}
+
+//ゲームスタート
+drawGame();
+
+//キーボードの矢印キー入力に応じてミノの移動や回転を制御
+document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+        case 'ArrowUp':
+          tetro.rotate();
+          break;
+        case 'ArrowRight':
+          tetro.move(1, 0);
+          break;
+        case 'ArrowLeft':
+          tetro.move(-1, 0);
+          break;
+        case 'ArrowDown':
+          tetro.move(0, 1);
+          break;
+        default:
+          break;
     }
-
-    draw();
-
-    // 回転ボタンのクリックイベント
-    let rotateButton = document.getElementById("rotateButton");
-    rotateButton.addEventListener("click", function(){
-        mino4.rotate();
-        draw();
-    });
-
-    //　右移動のクリックイベント
-    let toRightButton = document.getElementById("moveToRight");
-    toRightButton.addEventListener("click", function(){
-        mino4.move(1, 0);
-        draw();
-    });
-    
-    //　左移動のクリックイベント
-    let toLeftButton = document.getElementById("moveToLeft");
-    toLeftButton.addEventListener("click", function(){
-        mino4.move(-1, 0);
-        draw();
-    });
-//blockを表示
-
-/*
-let block1 = new Block(3,4);
-block1.draw();
-new Block(2,8).draw()
-
-//Minoを表示
-let mino1 = new Mino(1,10);
-mino1.draw()
-
-let mino2 = new Mino(8,0);
-mino2.draw()
-
-let mino4 = new Mino(6,7);
-//mino4.draw();//
-mino4.rotate();
-mino4.draw();
+});
 
 
-let mino5 = new Mino(6,12);
-mino5.rotate();
-mino5.rotate();
-mino5.draw()
+//ボタンで動かす。
+let mino4 = new Mino(3, 0);
+// 回転ボタンのクリックイベント
+let rotateButton = document.getElementById("rotateButton");
+rotateButton.addEventListener("click", function(){
+    mino4.rotate();
+    mino4.draw();
+});
 
-let mino6 = new Mino(6,17);
+//　右移動のクリックイベント
+let toRightButton = document.getElementById("moveToRight");
+toRightButton.addEventListener("click", function(){
+    mino4.move(1, 0);
+    mino4.draw();
+});
 
-let mino7 = new Mino(3,17);
-mino6.draw()
-*/
-
-console.log(Block.windowH);
-console.log(Block.size);
+//　左移動のクリックイベント
+let toLeftButton = document.getElementById("moveToLeft");
+toLeftButton.addEventListener("click", function(){
+    mino4.move(-1, 0);
+    mino4.draw();
+});
