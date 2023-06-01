@@ -244,6 +244,7 @@ class Game {
 //ゲームの実行(ここは最終的に関数化したいです)
 //field 初期化
 Game.setField();
+let field = Field.makeField();
 
 //1.mino生成
 let tetro = Mino.createMino();
