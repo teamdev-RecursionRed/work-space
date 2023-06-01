@@ -230,7 +230,6 @@ class Field {
 
 }
 
-console.log(Field.makeField())
 
 class Game {
     /** fieldを初期化する関数*/
