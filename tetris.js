@@ -89,6 +89,12 @@ class Mino {
 
     /**tatrominoを描写する関数*/
     draw(){
+        //前にあったminoを消す
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        //fieldを塗る
+        Field.draw();
+
+        //minoの描写
         for (let y = 0; y < Mino.size; y++){
             for(let x = 0; x < Mino.size; x++){
 
@@ -217,77 +223,44 @@ class Game {
 
 
 
-// //ゲームの実行(ここは最終的に関数化したいです)
-// //field 初期化
-// Game.setField();
-
-// //1.mino生成
-// let tetro = Mino.createMino();
-// //キーボードの矢印キー入力に応じてミノの移動や回転を制御
-// document.addEventListener('keydown', (e) => {
-//   switch (e.key) {
-//       case 'ArrowUp':
-//         tetro.rotate();
-//         break;
-//       case 'ArrowRight':
-//         tetro.move(1, 0);
-//         break;
-//       case 'ArrowLeft':
-//         tetro.move(-1, 0);
-//         break;
-//       case 'ArrowDown':
-//         tetro.move(0, 1);
-//         break;
-//       default:
-//         break;
-//   }
-// });
-
-// //2. minoの連続落下、一番下にたどり着く
-
-// //3. minoを固定
-
-// //4. line判定
-
-// //1.に戻り1~4を繰り返す。
-
-
-
-
-
-
+//ゲームの実行(ここは最終的に関数化したいです)
 //field 初期化
 Game.setField();
 
-//mino生成
+//1.mino生成
 let tetro = Mino.createMino();
+tetro.draw();
 //キーボードの矢印キー入力に応じてミノの移動や回転を制御
 document.addEventListener('keydown', (e) => {
   switch (e.key) {
       case 'ArrowUp':
         tetro.rotate();
+        tetro.draw();
         break;
       case 'ArrowRight':
         tetro.move(1, 0);
+        tetro.draw();
         break;
       case 'ArrowLeft':
         tetro.move(-1, 0);
+        tetro.draw();
         break;
       case 'ArrowDown':
         tetro.move(0, 1);
+        tetro.draw();
         break;
       default:
         break;
   }
 });
 
-
+//2. minoの連続落下、一番下にたどり着く
 // 描画間隔(ms)
-const interval = 700;
+const interval = 700; 
 let lastTime = 0;
 
 
-/** */
+/** 下までminoを落とす関数*/
 function drawGame() {
   const currentTime = Date.now();
   const deltaTime = currentTime - lastTime;
@@ -305,8 +278,23 @@ function drawGame() {
   //requestAnimationFrame を使用して連続的に描画を更新
   requestAnimationFrame(drawGame);
 }
-
 drawGame();
+
+//3. minoを固定
+
+//4. line判定
+
+//1.に戻り1~4を繰り返す。
+
+
+
+
+
+
+
+
+
+
 
 
 
