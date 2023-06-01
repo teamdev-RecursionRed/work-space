@@ -37,6 +37,7 @@ class Mino {
         this.x = x;
         this.y = y;
         this.tetro = Mino.tetros[Math.floor(Math.random() * Mino.tetros.length)];
+        this.color = `rgb(${Mino.colors[Math.floor(Math.random() * Mino.colors.length)]})`;
     }
 
     //Minoの各長さ
@@ -86,6 +87,9 @@ class Mino {
           [0, 0, 0, 0],
         ]
       ];
+    
+    /** tetoro 色配列 */
+    static colors = [[255, 75, 0], [0, 90, 255], [3, 175, 122], [77, 196, 255], [246, 170, 0], [255, 241, 0], [153, 0, 153]];
 
     /**tatrominoを描写する関数*/
     draw(){
@@ -104,7 +108,7 @@ class Mino {
                     let tetroY = (this.y + y) * Block.size;
 
                     //座標に1ブロック描写
-                    context.fillStyle = "rgb(0, 0, 255)";
+                    context.fillStyle = this.color;
                     context.fillRect(tetroX, tetroY, Block.size, Block.size);
                     context.strokeStyle="rgb(0, 0, 0)";
                     context.strokeRect(tetroX, tetroY, Block.size, Block.size);
