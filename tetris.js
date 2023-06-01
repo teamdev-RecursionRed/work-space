@@ -178,12 +178,14 @@ class Mino {
         
         return newMino;
     }
+
+
 }
 
 
 class Field {
     //col(列：横に何個入るか), row(行：縦に何個入るか), colはminoの中心計算より偶数が望ましい
-    static Col = 10;
+    static Col = 12;
     static Row = 20;
 
     //canvasの長さ = 行の長さ(列の長さ) * 1ブロックの大きさ
@@ -211,7 +213,24 @@ class Field {
       }
     }
 
+    /**field行列を返す関数 */
+    static makeField(){
+      let field = [];
+
+      for(let y = 0; y < Field.Row; y++){
+        field[y] = [];
+
+        for(let x = 0; x < Field.Col; x++){
+          field[y][x] = 0;
+        }
+      }
+
+      return field;
+    }
+
 }
+
+console.log(Field.makeField())
 
 class Game {
     /** fieldを初期化する関数*/
