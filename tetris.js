@@ -4,6 +4,12 @@ let context = canvas.getContext("2d");
 
 
 //各クラス
+class Helper {
+    static calcColsCenter(){
+        return Math.floor((Field.Col - Mino.size) / 2);
+    }
+}
+
 class Block {
     //ブロック1マスのサイズ(px)をwindow.heightによってブロックのサイズを決定します
     static windowH = window.innerHeight;
@@ -24,6 +30,7 @@ class Block {
     }
     
 }
+
 
 class Mino {
     constructor(x, y){
@@ -80,14 +87,17 @@ class Mino {
         ]
       ];
 
-    //tatroを描写
+    /**tatrominoを描写する関数*/
     draw(){
-        for (let y = 0; y < this.tetro.length; y++){
-            for(let x = 0; x < this.tetro[0].length; x++){
-                let tetroX = (this.x + x) * Block.size;
-                let tetroY = (this.y + y) * Block.size;
+        for (let y = 0; y < Mino.size; y++){
+            for(let x = 0; x < Mino.size; x++){
 
                 if(this.tetro[y][x]==1){
+                    //tetorominoの1ブロックの座標
+                    let tetroX = (this.x + x) * Block.size;
+                    let tetroY = (this.y + y) * Block.size;
+
+                    //座標に1ブロック描写
                     context.fillStyle = "rgb(0, 0, 255)";
                     context.fillRect(tetroX, tetroY, Block.size, Block.size);
                     context.strokeStyle="rgb(0, 0, 0)";
@@ -97,9 +107,14 @@ class Mino {
         }
     }
 
+    /**
+     * minoの衝突判定の結果ブーリアン値を返す関数
+     * @param {*} dx x方向にずらしたい値
+     * @param {*} dy y方向にずらしたい値
+     */
     checkCollision(dx, dy) {
-        for (let y = 0; y < this.tetro.length; y++) {
-            for (let x = 0; x < this.tetro[y].length; x++) {
+        for (let y = 0; y < Mino.size; y++) {
+            for (let x = 0; x < Mino.size; x++) {
                 if (this.tetro[y][x]) {
                     const newX = this.x + x + dx;
                     const newY = this.y + y + dy;
@@ -116,12 +131,19 @@ class Mino {
         return false;
     }
     
+    /**
+     * minoをdx,dyマスずつ動かす関数
+     * @param {*} dx x方向にずらす値
+     * @param {*} dy y方向にずらす値
+     */
     move(dx, dy){
         if (!this.checkCollision(dx, dy)){
             this.x += dx;
             this.y += dy;
         }
     }
+
+    /** minoを回転させる関数*/
     rotate() {
         const preMatrix = this.tetro;
         this.tetro = this.tetro[0].map((_, index) => this.tetro.map(row => row[index])).reverse();
@@ -140,10 +162,21 @@ class Mino {
             }
         }
     }
+
+    /** キャンバス上部中心に生成したminoをインスタンスとして返す関数*/
+    static createMino() {
+        const positionX = Helper.calcColsCenter();
+        const positionY = 0;
+
+        const newMino = new Mino(positionX, positionY);
+        
+        return newMino;
+    }
 }
 
+
 class Field {
-    //col(列：横に何個入るか), row(行：縦に何個入るか)
+    //col(列：横に何個入るか), row(行：縦に何個入るか), colはminoの中心計算より偶数が望ましい
     static Col = 10;
     static Row = 20;
 
@@ -151,40 +184,121 @@ class Field {
     static canvasW = Field.Col * Block.size;
     static canvasH = Field.Row * Block.size;
 
-    //canvasのwidthとheightを決める関数
-    static makeCanvas(){
+    /**canvasのwidthとheightを決める関数*/
+    static decideCanvasScale(){
         canvas.width = Field.canvasW;
         canvas.height = Field.canvasH;
     }
 
+    /**canvas内のマスを全て白にする関数*/
     static draw(){
       for (let x = 0; x < Field.Col; x++){
         for (let y = 0; y < Field.Row; y++){
+          //1マスを白くする
           context.fillStyle = "white";
           context.fillRect(x * Block.size, y * Block.size, Block.size, Block.size);
+          
+          //1マスに枠を付ける(無くてもいい)
+          context.strokeStyle="rgb(192, 192, 192, 0.1)";
+          context.strokeRect(x * Block.size, y * Block.size, Block.size, Block.size);
         }
       }
     }
+
 }
 
-//canvasの大きさを決定
-Field.makeCanvas();
+class Game {
+    /** fieldを初期化する関数*/
+    static setField(){
+        Field.decideCanvasScale();
+        Field.draw();
+    }
+}
+
+
+
+// //ゲームの実行(ここは最終的に関数化したいです)
+// //field 初期化
+// Game.setField();
+
+// //1.mino生成
+// let tetro = Mino.createMino();
+// //キーボードの矢印キー入力に応じてミノの移動や回転を制御
+// document.addEventListener('keydown', (e) => {
+//   switch (e.key) {
+//       case 'ArrowUp':
+//         tetro.rotate();
+//         break;
+//       case 'ArrowRight':
+//         tetro.move(1, 0);
+//         break;
+//       case 'ArrowLeft':
+//         tetro.move(-1, 0);
+//         break;
+//       case 'ArrowDown':
+//         tetro.move(0, 1);
+//         break;
+//       default:
+//         break;
+//   }
+// });
+
+// //2. minoの連続落下、一番下にたどり着く
+
+// //3. minoを固定
+
+// //4. line判定
+
+// //1.に戻り1~4を繰り返す。
+
+
+
+
+
+
+//field 初期化
+Game.setField();
+
+//mino生成
+let tetro = Mino.createMino();
+//キーボードの矢印キー入力に応じてミノの移動や回転を制御
+document.addEventListener('keydown', (e) => {
+  switch (e.key) {
+      case 'ArrowUp':
+        tetro.rotate();
+        break;
+      case 'ArrowRight':
+        tetro.move(1, 0);
+        break;
+      case 'ArrowLeft':
+        tetro.move(-1, 0);
+        break;
+      case 'ArrowDown':
+        tetro.move(0, 1);
+        break;
+      default:
+        break;
+  }
+});
+
 
 // 描画間隔(ms)
 const interval = 700;
 let lastTime = 0;
-let tetro = new Mino(3, -1);
 
+
+/** */
 function drawGame() {
   const currentTime = Date.now();
   const deltaTime = currentTime - lastTime;
 
   if (deltaTime > interval) {
     //キャンバスをクリアしフィールドとミノを描画
-    //tetro.move(0, 1); によりミノを下に移動
     context.clearRect(0, 0, canvas.width, canvas.height);
     Field.draw();
     tetro.draw();
+
+    //tetro.move(0, 1); によりミノを下に移動
     tetro.move(0, 1);
     lastTime = currentTime;
   }
@@ -192,28 +306,13 @@ function drawGame() {
   requestAnimationFrame(drawGame);
 }
 
-//ゲームスタート
 drawGame();
 
-//キーボードの矢印キー入力に応じてミノの移動や回転を制御
-document.addEventListener('keydown', (e) => {
-    switch (e.key) {
-        case 'ArrowUp':
-          tetro.rotate();
-          break;
-        case 'ArrowRight':
-          tetro.move(1, 0);
-          break;
-        case 'ArrowLeft':
-          tetro.move(-1, 0);
-          break;
-        case 'ArrowDown':
-          tetro.move(0, 1);
-          break;
-        default:
-          break;
-    }
-});
+
+
+
+
+
 
 
 //ボタンで動かす。
