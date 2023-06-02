@@ -94,7 +94,7 @@ class Mino {
 
     /**tatrominoを描写する関数*/
     draw(){
-        //前にあったminoを消す
+        //前にあったminoやFieldのブロックを消す
         context.clearRect(0, 0, canvas.width, canvas.height);
         //fieldを塗る
         Field.draw();
@@ -180,6 +180,12 @@ class Mino {
         const positionY = 0;
 
         const newMino = new Mino(positionX, positionY);
+
+        if(newMino.checkCollision(0, 0)){
+        //Game Over process  
+          cancelAnimationFrame(myReq);
+          return null;
+        }
         
         return newMino;
     }
@@ -243,7 +249,7 @@ class Field {
           }
         }
       }
-  }
+    }
 
     /**field行列を返す関数 */
     static makeField(){
@@ -277,6 +283,7 @@ class Field {
         }
       }
     }
+
     static moveDown() {
       if (!tetro.checkCollision(0, 1)) {
         tetro.move(0, 1);
@@ -313,8 +320,7 @@ class Game {
 //0.field 初期化
 Game.setField();
 let field = Field.makeField();
-field[15][5]=1;//test
-
+// field[15][5]=1;// collision test 用
 
 //1.mino生成
 let tetro = Mino.createMino();
@@ -348,7 +354,8 @@ document.addEventListener('keydown', (e) => {
 const interval = 700; 
 let lastTime = 0;
 
-
+let myReq = null;// 
+myReq = requestAnimationFrame(drawGame);
 /** 下までminoを落とす関数*/
 function drawGame() {
   const currentTime = Date.now();
@@ -360,14 +367,17 @@ function drawGame() {
     Field.draw();
     tetro.draw();
 
-    Field.moveDown(); // ミノを一つ下に移動 & tetroの更新
+    Field.moveDown(); // ミノを一つ下に移動 & tetroの更新 & ミノ生成時の衝突検知
 
     lastTime = currentTime;
   }
   //requestAnimationFrame を使用して連続的に描画を更新
-  requestAnimationFrame(drawGame);
+  if(myReq !== null){
+    myReq = requestAnimationFrame(drawGame);
+  }
 }
-drawGame();
+
+//drawGame();
 
 //3. minoを固定
 
