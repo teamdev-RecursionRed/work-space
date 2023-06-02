@@ -259,7 +259,43 @@ class Field {
 
       return field;
     }
-
+    // ラインを消去する関数
+    static clearLines() {
+      for (let y = Field.Row - 1; y >= 0; y--) {
+        let lineFilled = true;
+        for (let x = 0; x < Field.Col; x++) {
+          if (field[y][x] === 0) {
+            lineFilled = false;
+            break;
+          }
+        }
+        if (lineFilled) {
+          // ラインを消去
+          field.splice(y, 1);
+          // 新しい空行を追加
+          field.unshift(new Array(Field.Col).fill(0));
+        }
+      }
+    }
+    static moveDown() {
+      if (!tetro.checkCollision(0, 1)) {
+        tetro.move(0, 1);
+      } else {
+        // ミノが着地した場合
+        // フィールドにミノのブロックを追加
+        for (let y = 0; y < Mino.size; y++) {
+          for (let x = 0; x < Mino.size; x++) {
+            if (tetro.tetro[y][x]) {
+              const fieldX = tetro.x + x;
+              const fieldY = tetro.y + y;
+              field[fieldY][fieldX] = 1;
+            }
+          }
+        }
+        Field.clearLines(); // ラインの消去
+        tetro = Mino.createMino(); // 新しいミノを生成
+      }
+    }
 }
 
 
@@ -324,20 +360,7 @@ function drawGame() {
     Field.draw();
     tetro.draw();
 
-    //tetro.move(0, 1); によりミノを下に移動(下に動けるかをcheak)
-    if(!tetro.checkCollision(0, 1)){
-      //tetroを下に落とす
-      tetro.move(0, 1);
-    }
-    else{
-      //tetro座標をfieldに反映し、固定する。
-      tetro.fixTetro();
-
-    }
-    
-
-
-
+    Field.moveDown(); // ミノを一つ下に移動 & tetroの更新
 
     lastTime = currentTime;
   }
