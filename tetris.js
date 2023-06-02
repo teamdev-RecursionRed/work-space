@@ -36,8 +36,9 @@ class Mino {
     constructor(x, y){
         this.x = x;
         this.y = y;
-        this.tetro = Mino.tetros[Math.floor(Math.random() * Mino.tetros.length)];
-        this.color = `rgb(${Mino.colors[Math.floor(Math.random() * Mino.colors.length)]})`;
+        let index = Math.floor(Math.random() * Mino.tetros.length);
+        this.tetro = Mino.tetros[index];
+        this.color = `rgb(${Mino.colors[index]})`;
     }
 
     //Minoの各長さ
@@ -183,6 +184,21 @@ class Mino {
         return newMino;
     }
 
+
+    /**minoをfieldに固定する関数 */
+    fixTetro(){
+      for(let y = 0; y < Mino.size; y++){
+        for(let x = 0; x < Mino.size; x++){
+
+          if(this.tetro[y][x] == 1){
+            field[this.y + y][this.x + x] = 1;
+          }
+        }
+      }
+
+      this.x = 0;
+      this.y = 0;
+    }
 
 }
 
@@ -344,7 +360,8 @@ function drawGame() {
     Field.draw();
     tetro.draw();
 
-    Field.moveDown(); // ミノを一つ下に移動
+    Field.moveDown(); // ミノを一つ下に移動 & tetroの更新
+
     lastTime = currentTime;
   }
   //requestAnimationFrame を使用して連続的に描画を更新
