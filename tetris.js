@@ -184,6 +184,21 @@ class Mino {
     }
 
 
+    /**minoをfieldに固定する関数 */
+    fixTetro(){
+      for(let y = 0; y < Mino.size; y++){
+        for(let x = 0; x < Mino.size; x++){
+
+          if(this.tetro[y][x] == 1){
+            field[this.y + y][this.x + x] = 1;
+          }
+        }
+      }
+
+      this.x = 0;
+      this.y = 0;
+    }
+
 }
 
 
@@ -308,8 +323,21 @@ function drawGame() {
     Field.draw();
     tetro.draw();
 
-    //tetro.move(0, 1); によりミノを下に移動
-    tetro.move(0, 1);
+    //tetro.move(0, 1); によりミノを下に移動(下に動けるかをcheak)
+    if(!tetro.checkCollision(0, 1)){
+      //tetroを下に落とす
+      tetro.move(0, 1);
+    }
+    else{
+      //tetro座標をfieldに反映し、固定する。
+      tetro.fixTetro();
+
+    }
+    
+
+
+
+
     lastTime = currentTime;
   }
   //requestAnimationFrame を使用して連続的に描画を更新
