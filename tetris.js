@@ -130,7 +130,7 @@ class Mino {
                     const newY = this.y + y + dy;
 
                     // 範囲外アクセスまたは他のブロックとの衝突をチェック
-                    if (newX < 0 || newX >= Field.Col || newY >= Field.Row) {
+                    if (newX < 0 || newX >= Field.Col || newY >= Field.Row || field[newY][newX]!=0) {
                         // 衝突がある場合はtrueを返す
                         return true;
                     }
@@ -202,20 +202,32 @@ class Field {
         canvas.height = Field.canvasH;
     }
 
-    /**canvas内のマスを全て白にする関数*/
+
+    /** field行列で0の要素を白く染める関数*/
     static draw(){
-      for (let x = 0; x < Field.Col; x++){
-        for (let y = 0; y < Field.Row; y++){
-          //1マスを白くする
-          context.fillStyle = "white";
-          context.fillRect(x * Block.size, y * Block.size, Block.size, Block.size);
-          
-          //1マスに枠を付ける(無くてもいい)
-          context.strokeStyle="rgb(192, 192, 192, 0.1)";
-          context.strokeRect(x * Block.size, y * Block.size, Block.size, Block.size);
+      for (let y = 0; y < Field.Row; y++){
+        for(let x = 0; x < Field.Col; x++){
+          //fieldの座標
+          let fieldX = x * Block.size;
+          let fieldY = y * Block.size;
+
+          if(field[y][x]==0){
+            //座標に1ブロック描写
+            context.fillStyle = "white";
+            context.fillRect(fieldX, fieldY, Block.size, Block.size);
+            context.strokeStyle="rgb(0, 0, 0, 0.1)";
+            context.strokeRect(fieldX, fieldY, Block.size, Block.size);
+          }
+          else{//test
+            //座標に1ブロック描写
+            context.fillStyle = "blue";
+            context.fillRect(fieldX, fieldY, Block.size, Block.size);
+            context.strokeStyle="rgb(0, 0, 0, 0.1)";
+            context.strokeRect(fieldX, fieldY, Block.size, Block.size);
+          }
         }
       }
-    }
+  }
 
     /**field行列を返す関数 */
     static makeField(){
@@ -239,16 +251,18 @@ class Game {
     /** fieldを初期化する関数*/
     static setField(){
         Field.decideCanvasScale();
-        Field.draw();
     }
 }
 
 
 
 //ゲームの実行(ここは最終的に関数化したいです)
-//field 初期化
+
+//0.field 初期化
 Game.setField();
 let field = Field.makeField();
+field[15][5]=1;//test
+
 
 //1.mino生成
 let tetro = Mino.createMino();
@@ -305,6 +319,8 @@ drawGame();
 
 //3. minoを固定
 
+
+
 //4. line判定
 
 //1.に戻り1~4を繰り返す。
@@ -326,25 +342,25 @@ drawGame();
 
 
 
-//ボタンで動かす。
-let mino4 = new Mino(3, 0);
-// 回転ボタンのクリックイベント
-let rotateButton = document.getElementById("rotateButton");
-rotateButton.addEventListener("click", function(){
-    mino4.rotate();
-    mino4.draw();
-});
+// //ボタンで動かす。
+// let mino4 = new Mino(3, 0);
+// // 回転ボタンのクリックイベント
+// let rotateButton = document.getElementById("rotateButton");
+// rotateButton.addEventListener("click", function(){
+//     mino4.rotate();
+//     mino4.draw();
+// });
 
-//　右移動のクリックイベント
-let toRightButton = document.getElementById("moveToRight");
-toRightButton.addEventListener("click", function(){
-    mino4.move(1, 0);
-    mino4.draw();
-});
+// //　右移動のクリックイベント
+// let toRightButton = document.getElementById("moveToRight");
+// toRightButton.addEventListener("click", function(){
+//     mino4.move(1, 0);
+//     mino4.draw();
+// });
 
-//　左移動のクリックイベント
-let toLeftButton = document.getElementById("moveToLeft");
-toLeftButton.addEventListener("click", function(){
-    mino4.move(-1, 0);
-    mino4.draw();
-});
+// //　左移動のクリックイベント
+// let toLeftButton = document.getElementById("moveToLeft");
+// toLeftButton.addEventListener("click", function(){
+//     mino4.move(-1, 0);
+//     mino4.draw();
+// });
