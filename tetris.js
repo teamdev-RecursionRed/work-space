@@ -36,8 +36,9 @@ class Mino {
     constructor(x, y){
         this.x = x;
         this.y = y;
-        this.tetro = Mino.tetros[Math.floor(Math.random() * Mino.tetros.length)];
-        this.color = `rgb(${Mino.colors[Math.floor(Math.random() * Mino.colors.length)]})`;
+        let index = Math.floor(Math.random() * Mino.tetros.length);
+        this.tetro = Mino.tetros[index];
+        this.color = `rgb(${Mino.colors[index]})`;
     }
 
     //Minoの各長さ
