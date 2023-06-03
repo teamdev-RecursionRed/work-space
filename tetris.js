@@ -10,11 +10,18 @@ class Helper {
     }
 }
 
-// constructor, drawを消去
+class music {
+  static FeelGood = new Audio("Syn Cole - Feel Good [NCS Release].mp3");
+  static rotate = new Audio("rotate.mp3");
+  static landing = new Audio("landing.mp3");
+  static eraseLine = new Audio("eraseLine.mp3");
+}
+
+
 class Block {
     //ブロック1マスのサイズ(px)をwindow.heightによってブロックのサイズを決定します
     static windowH = window.innerHeight;
-    static size = (Block.windowH > 768) ? 28 : 25;
+    static size = (Block.windowH > 768) ? 28 : 26;
 }
 
 let color;
@@ -246,6 +253,9 @@ class Field {
           field.splice(y, 1);
           // 新しい空行を追加
           field.unshift(new Array(Field.Col).fill("white"));
+          //消去音
+          music.eraseLine.currentTime = 0;
+          music.eraseLine.play();
         }
       }
       // ゲームオーバーチェック
@@ -274,6 +284,9 @@ static moveDown() {
           const fieldX = tetro.x + x;
           const fieldY = tetro.y + y;
           field[fieldY][fieldX] = tetro.color;
+          //着地音
+          music.landing.currentTime = 0;
+          music.landing.play();
 
         }
       }
@@ -309,6 +322,8 @@ document.addEventListener('keydown', (e) => {
       case 'ArrowUp':
         tetro.rotate();
         tetro.draw();
+        music.rotate.currentTime = 0;
+        music.rotate.play();
         break;
       case 'ArrowRight':
         tetro.move(1, 0);
@@ -327,14 +342,16 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-//2. minoの連続落下、一番下にたどり着く
 // 描画間隔(ms)
 const interval = 300; 
 let lastTime = 0;
 
+//scoreの計算
+let score = 0;
 
 // ゲームの実行
 let animationFrameId;
+
 function drawGame() {
   const currentTime = Date.now();
   const deltaTime = currentTime - lastTime;
@@ -354,4 +371,8 @@ function drawGame() {
   }
   animationFrameId = requestAnimationFrame(drawGame);
 }
+
+//ゲームスタート
+music.FeelGood.volume = 0.2;
+//music.FeelGood.play();
 drawGame();
