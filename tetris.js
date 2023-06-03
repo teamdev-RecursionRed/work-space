@@ -289,25 +289,6 @@ class Field {
 
     static moveDown() {
 
-      /*
-      if (!tetro.checkCollision(0, 1)) {
-        tetro.move(0, 1);
-      } else {
-        // ミノが着地した場合
-        // フィールドにミノのブロックを追加
-        for (let y = 0; y < Mino.size; y++) {
-          for (let x = 0; x < Mino.size; x++) {
-            if (tetro.tetro[y][x]) {
-              const fieldX = tetro.x + x;
-              const fieldY = tetro.y + y;
-              field[fieldY][fieldX] = 1;
-            }
-          }
-        }
-        Field.clearLines(); // ラインの消去
-        tetro = Mino.createMino(); // 新しいミノを生成
-      }
-      */
       if (!tetro.checkCollision(0, 1)) {
         tetro.move(0, 1);
       } else {
