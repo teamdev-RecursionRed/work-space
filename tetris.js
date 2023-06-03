@@ -100,7 +100,7 @@ class Mino {
                     //座標に1ブロック描写
                     context.fillStyle = color;
                     context.fillRect(tetroX, tetroY, Block.size, Block.size);
-                    context.strokeStyle="rgb(0, 0, 0)";
+                    context.strokeStyle="rgb(0, 0, 0, 0.1)";
                     context.strokeRect(tetroX, tetroY, Block.size, Block.size);
                 }
             }
@@ -274,7 +274,6 @@ static moveDown() {
           const fieldX = tetro.x + x;
           const fieldY = tetro.y + y;
           field[fieldY][fieldX] = tetro.color;
-
         }
       }
     }
@@ -354,4 +353,6 @@ function drawGame() {
   }
   animationFrameId = requestAnimationFrame(drawGame);
 }
+
 drawGame();
+
