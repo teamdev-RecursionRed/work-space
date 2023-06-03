@@ -177,29 +177,12 @@ class Mino {
     /** キャンバス上部中心に生成したminoをインスタンスとして返す関数*/
     static createMino() {
         const positionX = Helper.calcColsCenter();
-        const positionY = 0;
+        const positionY = -1;
 
         const newMino = new Mino(positionX, positionY);
         
         return newMino;
     }
-
-
-    /**minoをfieldに固定する関数 */
-    fixTetro(){
-      for(let y = 0; y < Mino.size; y++){
-        for(let x = 0; x < Mino.size; x++){
-
-          if(this.tetro[y][x] == 1){
-            field[this.y + y][this.x + x] = 1;
-          }
-        }
-      }
-
-      this.x = 0;
-      this.y = 0;
-    }
-
 }
 
 
@@ -219,7 +202,7 @@ class Field {
     }
 
 
-    /** field行列で0の要素を白く染める関数*/
+    /** field行列で0の要素を白く染める&fieldに固定したミノを描く(else)関数*/
     static draw(){
       for (let y = 0; y < Field.Row; y++){
         for(let x = 0; x < Field.Col; x++){
@@ -236,9 +219,9 @@ class Field {
           }
           else{//test
             //座標に1ブロック描写
-            context.fillStyle = "blue";
+            context.fillStyle = field[y][x];
             context.fillRect(fieldX, fieldY, Block.size, Block.size);
-            context.strokeStyle="rgb(0, 0, 0, 0.1)";
+            context.strokeStyle="rgb(255, 255, 255)";
             context.strokeRect(fieldX, fieldY, Block.size, Block.size);
           }
         }
@@ -288,7 +271,7 @@ class Field {
             if (tetro.tetro[y][x]) {
               const fieldX = tetro.x + x;
               const fieldY = tetro.y + y;
-              field[fieldY][fieldX] = 1;
+              field[fieldY][fieldX] = tetro.color;
             }
           }
         }
@@ -313,7 +296,7 @@ class Game {
 //0.field 初期化
 Game.setField();
 let field = Field.makeField();
-field[15][5]=1;//test
+//field[15][5]=1;//test
 
 
 //1.mino生成
@@ -369,50 +352,31 @@ function drawGame() {
 }
 drawGame();
 
-//3. minoを固定
-
-
-
-//4. line判定
-
-//1.に戻り1~4を繰り返す。
 
 
 
 
 
 
+//ボタンで動かす。
+let mino4 = new Mino(3, 0);
+// 回転ボタンのクリックイベント
+let rotateButton = document.getElementById("rotateButton");
+rotateButton.addEventListener("click", function(){
+    mino4.rotate();
+    mino4.draw();
+});
 
+//　右移動のクリックイベント
+let toRightButton = document.getElementById("moveToRight");
+toRightButton.addEventListener("click", function(){
+    mino4.move(1, 0);
+    mino4.draw();
+});
 
-
-
-
-
-
-
-
-
-
-
-// //ボタンで動かす。
-// let mino4 = new Mino(3, 0);
-// // 回転ボタンのクリックイベント
-// let rotateButton = document.getElementById("rotateButton");
-// rotateButton.addEventListener("click", function(){
-//     mino4.rotate();
-//     mino4.draw();
-// });
-
-// //　右移動のクリックイベント
-// let toRightButton = document.getElementById("moveToRight");
-// toRightButton.addEventListener("click", function(){
-//     mino4.move(1, 0);
-//     mino4.draw();
-// });
-
-// //　左移動のクリックイベント
-// let toLeftButton = document.getElementById("moveToLeft");
-// toLeftButton.addEventListener("click", function(){
-//     mino4.move(-1, 0);
-//     mino4.draw();
-// });
+//　左移動のクリックイベント
+let toLeftButton = document.getElementById("moveToLeft");
+toLeftButton.addEventListener("click", function(){
+    mino4.move(-1, 0);
+    mino4.draw();
+});
