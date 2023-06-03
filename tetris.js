@@ -212,7 +212,7 @@ class Field {
 
           if(field[y][x]==0){
             //座標に1ブロック描写
-            context.fillStyle = "white";
+            context.fillStyle = "rgb(255, 255, 255, 0.7)";
             context.fillRect(fieldX, fieldY, Block.size, Block.size);
             context.strokeStyle="rgb(0, 0, 0, 0.1)";
             context.strokeRect(fieldX, fieldY, Block.size, Block.size);
@@ -358,25 +358,25 @@ drawGame();
 
 
 
-//ボタンで動かす。
-let mino4 = new Mino(3, 0);
-// 回転ボタンのクリックイベント
-let rotateButton = document.getElementById("rotateButton");
-rotateButton.addEventListener("click", function(){
-    mino4.rotate();
-    mino4.draw();
-});
+// //ボタンで動かす。
+// let mino4 = new Mino(3, 0);
+// // 回転ボタンのクリックイベント
+// let rotateButton = document.getElementById("rotateButton");
+// rotateButton.addEventListener("click", function(){
+//     mino4.rotate();
+//     mino4.draw();
+// });
 
-//　右移動のクリックイベント
-let toRightButton = document.getElementById("moveToRight");
-toRightButton.addEventListener("click", function(){
-    mino4.move(1, 0);
-    mino4.draw();
-});
+// //　右移動のクリックイベント
+// let toRightButton = document.getElementById("moveToRight");
+// toRightButton.addEventListener("click", function(){
+//     mino4.move(1, 0);
+//     mino4.draw();
+// });
 
-//　左移動のクリックイベント
-let toLeftButton = document.getElementById("moveToLeft");
-toLeftButton.addEventListener("click", function(){
-    mino4.move(-1, 0);
-    mino4.draw();
-});
+// //　左移動のクリックイベント
+// let toLeftButton = document.getElementById("moveToLeft");
+// toLeftButton.addEventListener("click", function(){
+//     mino4.move(-1, 0);
+//     mino4.draw();
+// });
