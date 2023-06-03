@@ -10,34 +10,23 @@ class Helper {
     }
 }
 
+// constructor, drawを消去
 class Block {
     //ブロック1マスのサイズ(px)をwindow.heightによってブロックのサイズを決定します
     static windowH = window.innerHeight;
     static size = (Block.windowH > 768) ? 28 : 25;
-    
-    //block1つの座標
-    constructor(x, y){
-        this.x = x;
-        this.y = y;
-    }
-
-    //ブロックobject(x,y)を描写
-    draw(){
-        context.fillStyle = "rgb(0, 0, 255)";//一旦全部青で表示しておきます、あとでテトロミノ別に設定します。
-        context.fillRect(this.x * Block.size, this.y * Block.size, Block.size, Block.size);
-        context.strokeStyle="rgb(0, 0, 0)";
-        context.strokeRect(this.x * Block.size, this.y * Block.size, Block.size, Block.size);
-    }
-    
 }
 
+let color;
 
 class Mino {
     constructor(x, y){
         this.x = x;
         this.y = y;
-        this.tetro = Mino.tetros[Math.floor(Math.random() * Mino.tetros.length)];
-        this.color = `rgb(${Mino.colors[Math.floor(Math.random() * Mino.colors.length)]})`;
+        let index = Math.floor(Math.random() * Mino.tetros.length);
+        this.tetro = Mino.tetros[index];
+        this.color = Mino.colors[index];
+        color = this.color;
     }
 
     //Minoの各長さ
@@ -89,7 +78,7 @@ class Mino {
       ];
     
     /** tetoro 色配列 */
-    static colors = [[255, 75, 0], [0, 90, 255], [3, 175, 122], [77, 196, 255], [246, 170, 0], [255, 241, 0], [153, 0, 153]];
+    static colors = ["cyan", "blue", "orange", "yellow", "green", "purple", "pink"];
 
     /**tatrominoを描写する関数*/
     draw(){
@@ -108,9 +97,9 @@ class Mino {
                     let tetroY = (this.y + y) * Block.size;
 
                     //座標に1ブロック描写
-                    context.fillStyle = this.color;
+                    context.fillStyle = color;
                     context.fillRect(tetroX, tetroY, Block.size, Block.size);
-                    context.strokeStyle="rgb(0, 0, 0)";
+                    context.strokeStyle="rgb(0, 0, 0, 0.1)";
                     context.strokeRect(tetroX, tetroY, Block.size, Block.size);
                 }
             }
@@ -130,7 +119,7 @@ class Mino {
                     const newY = this.y + y + dy;
 
                     // 範囲外アクセスまたは他のブロックとの衝突をチェック
-                    if (newX < 0 || newX >= Field.Col || newY >= Field.Row || field[newY][newX]!=0) {
+                    if (newX < 0 || newX >= Field.Col || newY >= Field.Row || field[newY][newX] !== "white") {
                         // 衝突がある場合はtrueを返す
                         return true;
                     }
@@ -176,7 +165,7 @@ class Mino {
     /** キャンバス上部中心に生成したminoをインスタンスとして返す関数*/
     static createMino() {
         const positionX = Helper.calcColsCenter();
-        const positionY = 0;
+        const positionY = -1;
 
         const newMino = new Mino(positionX, positionY);
         
@@ -211,16 +200,16 @@ class Field {
           let fieldX = x * Block.size;
           let fieldY = y * Block.size;
 
-          if(field[y][x]==0){
+          if(field[y][x] === "white"){
             //座標に1ブロック描写
             context.fillStyle = "white";
             context.fillRect(fieldX, fieldY, Block.size, Block.size);
             context.strokeStyle="rgb(0, 0, 0, 0.1)";
             context.strokeRect(fieldX, fieldY, Block.size, Block.size);
           }
-          else{//test
+          else{
             //座標に1ブロック描写
-            context.fillStyle = "blue";
+            context.fillStyle = field[y][x];
             context.fillRect(fieldX, fieldY, Block.size, Block.size);
             context.strokeStyle="rgb(0, 0, 0, 0.1)";
             context.strokeRect(fieldX, fieldY, Block.size, Block.size);
@@ -237,7 +226,7 @@ class Field {
         field[y] = [];
 
         for(let x = 0; x < Field.Col; x++){
-          field[y][x] = 0;
+          field[y][x] = "white";
         }
       }
 
@@ -248,7 +237,7 @@ class Field {
       for (let y = Field.Row - 1; y >= 0; y--) {
         let lineFilled = true;
         for (let x = 0; x < Field.Col; x++) {
-          if (field[y][x] === 0) {
+          if (field[y][x] === "white") {
             lineFilled = false;
             break;
           }
@@ -257,29 +246,42 @@ class Field {
           // ラインを消去
           field.splice(y, 1);
           // 新しい空行を追加
-          field.unshift(new Array(Field.Col).fill(0));
+          field.unshift(new Array(Field.Col).fill("white"));
+        }
+      }
+      // ゲームオーバーチェック
+      if (field[0].some(block => block !== "white")) {
+        console.log("Game Over");
+        // GAMEOVERを表示
+        context.font = "35px Arial";
+        context.fillStyle = "red";
+        context.fillText("GAME OVER", canvas.width / 2 - 100, canvas.height / 2);
+        // ゲームを停止する処理
+        cancelAnimationFrame(animationFrameId);
+        return true;
+      }
+      return false;
+    }
+
+static moveDown() {
+  if (!tetro.checkCollision(0, 1)) {
+    tetro.move(0, 1);
+  } else {
+    // ミノが着地した場合
+    // フィールドにミノのブロックを追加
+    for (let y = 0; y < Mino.size; y++) {
+      for (let x = 0; x < Mino.size; x++) {
+        if (tetro.tetro[y][x]) {
+          const fieldX = tetro.x + x;
+          const fieldY = tetro.y + y;
+          field[fieldY][fieldX] = tetro.color;
         }
       }
     }
-    static moveDown() {
-      if (!tetro.checkCollision(0, 1)) {
-        tetro.move(0, 1);
-      } else {
-        // ミノが着地した場合
-        // フィールドにミノのブロックを追加
-        for (let y = 0; y < Mino.size; y++) {
-          for (let x = 0; x < Mino.size; x++) {
-            if (tetro.tetro[y][x]) {
-              const fieldX = tetro.x + x;
-              const fieldY = tetro.y + y;
-              field[fieldY][fieldX] = 1;
-            }
-          }
-        }
-        Field.clearLines(); // ラインの消去
-        tetro = Mino.createMino(); // 新しいミノを生成
-      }
-    }
+    Field.clearLines(); // ラインの消去
+    tetro = Mino.createMino(); // 新しいミノを生成
+  }
+}
 }
 
 
@@ -297,8 +299,6 @@ class Game {
 //0.field 初期化
 Game.setField();
 let field = Field.makeField();
-field[15][5]=1;//test
-
 
 //1.mino生成
 let tetro = Mino.createMino();
@@ -333,22 +333,25 @@ const interval = 700;
 let lastTime = 0;
 
 
-/** 下までminoを落とす関数*/
+// ゲームの実行
+let animationFrameId;
 function drawGame() {
   const currentTime = Date.now();
   const deltaTime = currentTime - lastTime;
 
   if (deltaTime > interval) {
-    //キャンバスをクリアしフィールドとミノを描画
+    // キャンバスをクリアしフィールドとミノを描画
     context.clearRect(0, 0, canvas.width, canvas.height);
     Field.draw();
     tetro.draw();
 
     Field.moveDown(); // ミノを一つ下に移動
+    if (Field.clearLines()) {
+      return; // ゲームオーバー時は処理を終了
+    }
     lastTime = currentTime;
   }
-  //requestAnimationFrame を使用して連続的に描画を更新
-  requestAnimationFrame(drawGame);
+  animationFrameId = requestAnimationFrame(drawGame);
 }
 drawGame();
 
@@ -359,43 +362,3 @@ drawGame();
 //4. line判定
 
 //1.に戻り1~4を繰り返す。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// //ボタンで動かす。
-// let mino4 = new Mino(3, 0);
-// // 回転ボタンのクリックイベント
-// let rotateButton = document.getElementById("rotateButton");
-// rotateButton.addEventListener("click", function(){
-//     mino4.rotate();
-//     mino4.draw();
-// });
-
-// //　右移動のクリックイベント
-// let toRightButton = document.getElementById("moveToRight");
-// toRightButton.addEventListener("click", function(){
-//     mino4.move(1, 0);
-//     mino4.draw();
-// });
-
-// //　左移動のクリックイベント
-// let toLeftButton = document.getElementById("moveToLeft");
-// toLeftButton.addEventListener("click", function(){
-//     mino4.move(-1, 0);
-//     mino4.draw();
-// });
