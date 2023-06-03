@@ -27,6 +27,7 @@ class Mino {
         this.tetro = Mino.tetros[index];
         this.color = Mino.colors[index];
         color = this.color;
+
     }
 
     //Minoの各長さ
@@ -172,6 +173,21 @@ class Mino {
         return newMino;
     }
 
+
+    /**minoをfieldに固定する関数 */
+    fixTetro(){
+      for(let y = 0; y < Mino.size; y++){
+        for(let x = 0; x < Mino.size; x++){
+
+          if(this.tetro[y][x] == 1){
+            field[this.y + y][this.x + x] = 1;
+          }
+        }
+      }
+
+      this.x = 0;
+      this.y = 0;
+    }
 
 }
 
@@ -349,16 +365,9 @@ function drawGame() {
     if (Field.clearLines()) {
       return; // ゲームオーバー時は処理を終了
     }
+
     lastTime = currentTime;
   }
   animationFrameId = requestAnimationFrame(drawGame);
 }
 drawGame();
-
-//3. minoを固定
-
-
-
-//4. line判定
-
-//1.に戻り1~4を繰り返す。
