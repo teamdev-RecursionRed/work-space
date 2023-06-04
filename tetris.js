@@ -273,18 +273,22 @@ class Field {
       if(count==1){
         music.eraseLine.currentTime = 0;
         music.eraseLine.play();
+        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 10;
       }
       else if(count==2){
         music.eraseLine2.currentTime = 0;
         music.eraseLine2.play();
+        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 20;
       }
       else if(count==3){
         music.eraseLine3.currentTime = 0;
         music.eraseLine3.play();
+        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 30;
       }
       else if(count>=4){
         music.eraseLine4.currentTime = 0;
         music.eraseLine4.play();
+        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 10 * count;
       }
       
         
@@ -377,7 +381,8 @@ const interval = 300;
 let lastTime = 0;
 
 //scoreの計算
-let score = 0;
+let scoreDOM = document.querySelector(".scoreBoard");
+scoreDOM.innerHTML = 0;
 
 // ゲームの実行
 let animationFrameId;
