@@ -187,7 +187,6 @@ class Mino {
     }
 }
 
-
 class Field {
     //col(列：横に何個入るか), row(行：縦に何個入るか), colはminoの中心計算より偶数が望ましい
     static Col = 12;
@@ -331,6 +330,57 @@ class Field {
     }
 }
 
+let hold = null;
+let holdColor = "white";
+let holdCanvas = document.getElementById("holdCanvas");
+let holdContext = holdCanvas.getContext("2d");
+holdCanvas.width = 4 * Block.size;
+holdCanvas.height = 4 * Block.size;
+
+class Hold {
+  static hold (){
+    if (!hold){
+      hold = tetro;
+      holdColor = color;
+      tetro = Mino.createMino();
+      Hold.holdDraw();
+    }
+    else {
+      const tmpTetro = tetro;
+      const tmpColor = color;
+
+      tetro = hold;
+      color = holdColor;
+      tetro.x = Helper.calcColsCenter();
+      tetro.y = -1;
+      hold = tmpTetro;
+      holdColor = tmpColor;
+      Hold.holdDraw();
+    }
+  }
+  static holdDraw(){
+    //前にあったminoを消す
+    holdContext.clearRect(0, 0, holdCanvas.width, holdCanvas.height);
+
+    //minoの描写
+    for (let y = 0; y < Mino.size; y++){
+      for(let x = 0; x < Mino.size; x++){
+
+        if(hold.tetro[y][x]==1){
+          //tetorominoの1ブロックの座標
+          let tetroX = x * Block.size;
+          let tetroY = y * Block.size;
+
+          //座標に1ブロック描写
+          holdContext.fillStyle = holdColor;
+          holdContext.fillRect(tetroX, tetroY, Block.size, Block.size);
+          holdContext.strokeStyle="rgb(0, 0, 0)";
+          holdContext.strokeRect(tetroX, tetroY, Block.size, Block.size);
+        }
+      }
+    }
+  }
+}
 
 class Game {
     /** fieldを初期化する関数*/
@@ -338,7 +388,6 @@ class Game {
         Field.decideCanvasScale();
     }
 }
-
 
 
 //ゲームの実行(ここは最終的に関数化したいです)
@@ -370,6 +419,10 @@ document.addEventListener('keydown', (e) => {
       case 'ArrowDown':
         tetro.move(0, 1);
         tetro.draw();
+        break;
+      case 'h':
+      case 'H':
+        Hold.hold();
         break;
       case ' ':
         while (!tetro.checkCollision(0, 1))
