@@ -323,7 +323,7 @@ class Field {
         }
         
         music.landing.currentTime = 0;
-        music.landing.play();//着地音
+        //music.landing.play();//着地音
         Field.clearLines(); // ラインの消去
         tetro = Mino.createMino(); // 新しいミノを生成
       }
@@ -381,6 +381,48 @@ class Hold {
     }
   }
 }
+
+// let hold = null;
+// let holdColor = "white";
+
+let nextCanvas = document.getElementById("nextCanvas");
+let nextContext = nextCanvas.getContext("2d");
+nextCanvas.width = 4 * Block.size;
+nextCanvas.height = 4 * Block.size;
+
+class Field_next {
+  //col(列：横に何個入るか), row(行：縦に何個入るか), colはminoの中心計算より偶数が望ましい
+  static Col = 4;
+  static Row = 4;
+
+  //canvasの長さ = 行の長さ(列の長さ) * 1ブロックの大きさ
+  static canvasW = Field_next.Col * Block.size;
+  static canvasH = Field_next.Row * Block.size;
+
+  /**canvasのwidthとheightを決める関数*/
+  static decideCanvasScale(){
+      canvas_next.width = Field_next.canvasW;
+      canvas_next.height = Field_next.canvasH;
+  }
+
+  /**field_nextを白く染める関数 */
+  static draw(){
+    for (let y = 0; y < Field_next.Row; y++){
+      for(let x = 0; x < Field_next.Col; x++){
+        //fieldの座標
+        let fieldX = x * Block.size;
+        let fieldY = y * Block.size;
+        //座標に1ブロック描写
+        context.fillStyle = "rgb(255, 255, 255, 0.7)";
+        context.fillRect(fieldX, fieldY, Block.size, Block.size);
+        context.strokeStyle="rgb(0, 0, 0, 0.1)";
+        context.strokeRect(fieldX, fieldY, Block.size, Block.size);
+      }
+    }
+  }
+}
+
+
 
 class Game {
     /** fieldを初期化する関数*/
@@ -468,6 +510,7 @@ function drawGame() {
 
 //ゲームスタート
 music.FeelGood.volume = 0.2;
-music.FeelGood.play();
+//music.FeelGood.play();
+
 drawGame();
 

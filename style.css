@@ -3,6 +3,6 @@ body {
   background-size: cover;
 }
 
-.scoreBoard {
+.bg-transparent {
   background: rgb(255, 255 , 255 ,0.7);
 }
