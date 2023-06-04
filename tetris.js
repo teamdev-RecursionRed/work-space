@@ -303,6 +303,7 @@ class Field {
 
     return field;
   }
+
   // ラインを消去する関数
   static clearLines() {
     for (let y = Field.Row - 1; y >= 0; y--) {
@@ -320,7 +321,7 @@ class Field {
         field.unshift(new Array(Field.Col).fill("white"));
         //消去音
         music.eraseLine.currentTime = 0;
-        //music.eraseLine.play();
+        music.eraseLine.play();
 
       }
     }
@@ -352,7 +353,7 @@ class Field {
             field[fieldY][fieldX] = currentMino.color;
             //着地音
             music.landing.currentTime = 0;
-            //music.landing.play();
+            music.landing.play();
 
           }
         }
@@ -399,7 +400,7 @@ document.addEventListener('keydown', (e) => {
         currentMino.rotate();
         currentMino.draw();
         music.rotate.currentTime = 0;
-        //music.rotate.play();
+        music.rotate.play();
         break;
       case 'ArrowRight':
         currentMino.move(1, 0);
@@ -458,6 +459,6 @@ function drawGame() {
 
 //ゲームスタート
 music.FeelGood.volume = 0.2;
-//music.FeelGood.play();
+music.FeelGood.play();
 drawGame();
 
