@@ -19,6 +19,7 @@ class music {
   static eraseLine2 = new Audio("eraseLIne2.mp3");
   static eraseLine3 = new Audio("eraseLine3.mp3");
   static eraseLine4 = new Audio("eraseLine4.mp3");
+  static hold = new Audio("hold.mp3");
 }
 
 
@@ -272,22 +273,22 @@ class Field {
       if(count==1){
         music.eraseLine.currentTime = 0;
         music.eraseLine.play();
-        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 10;
+        scoreDOM.innerHTML = Math.floor(parseInt(scoreDOM.innerHTML, 10) + 100*1.0);
       }
       else if(count==2){
         music.eraseLine2.currentTime = 0;
         music.eraseLine2.play();
-        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 20;
+        scoreDOM.innerHTML = Math.floor(parseInt(scoreDOM.innerHTML, 10) + 200*1.1);
       }
       else if(count==3){
         music.eraseLine3.currentTime = 0;
         music.eraseLine3.play();
-        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 30;
+        scoreDOM.innerHTML = Math.floor(parseInt(scoreDOM.innerHTML, 10) + 300*1.3);
       }
       else if(count>=4){
         music.eraseLine4.currentTime = 0;
         music.eraseLine4.play();
-        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 10 * count;
+        scoreDOM.innerHTML = Math.floor(parseInt(scoreDOM.innerHTML, 10) + (100 * count)*1.5);
       }
       
         
@@ -323,7 +324,7 @@ class Field {
         }
         
         music.landing.currentTime = 0;
-        //music.landing.play();//着地音
+        music.landing.play();//着地音
         Field.clearLines(); // ラインの消去
         tetro = Mino.createMino(); // 新しいミノを生成
       }
@@ -387,8 +388,6 @@ class Hold {
 
 let nextCanvas = document.getElementById("nextCanvas");
 let nextContext = nextCanvas.getContext("2d");
-nextCanvas.width = 4 * Block.size;
-nextCanvas.height = 4 * Block.size;
 
 class Field_next {
   //col(列：横に何個入るか), row(行：縦に何個入るか), colはminoの中心計算より偶数が望ましい
@@ -465,11 +464,13 @@ document.addEventListener('keydown', (e) => {
       case 'h':
       case 'H':
         Hold.hold();
+        music.hold.play();
         break;
       case ' ':
         while (!tetro.checkCollision(0, 1))
           tetro.move(0, 1);
         Field.moveDown();
+        music.landing.play();
         break;
       default:
         break;
