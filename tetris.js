@@ -326,7 +326,9 @@ class Field {
         music.landing.currentTime = 0;
         music.landing.play();//着地音
         Field.clearLines(); // ラインの消去
-        tetro = Mino.createMino(); // 新しいミノを生成
+        tetro = next; 
+        next = Mino.createMino(); // 新しいミノを生成
+        Field_next.draw();
       }
     }
 }
@@ -402,6 +404,31 @@ class Field_next {
       nextCanvas.height = Field_next.canvasH;
   }
 
+  static draw(){
+    //前にあったminoを消す
+    nextContext.clearRect(0, 0, holdCanvas.width, holdCanvas.height);
+    //nextColor
+    let nextColor = tetro.color;
+
+    //minoの描写
+    for (let y = 0; y < Mino.size; y++){
+      for(let x = 0; x < Mino.size; x++){
+
+        if(next.tetro[y][x]==1){
+          //tetorominoの1ブロックの座標
+          let tetroX = x * Block.size;
+          let tetroY = y * Block.size;
+
+          //座標に1ブロック描写
+          nextContext.fillStyle = nextColor;
+          nextContext.fillRect(tetroX, tetroY, Block.size, Block.size);
+          nextContext.strokeStyle="rgb(0, 0, 0)";
+          nextContext.strokeRect(tetroX, tetroY, Block.size, Block.size);
+        }
+      }
+    }
+  }
+
 
 }
 
@@ -424,6 +451,8 @@ let field = Field.makeField();
 
 //1.mino生成
 let tetro = Mino.createMino();
+let next = Mino.createMino();
+Field_next.draw();
 tetro.draw();
 //キーボードの矢印キー入力に応じてミノの移動や回転を制御
 document.addEventListener('keydown', (e) => {
