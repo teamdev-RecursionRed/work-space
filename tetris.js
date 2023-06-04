@@ -16,6 +16,9 @@ class music {
   static rotate = new Audio("rotate.mp3");
   static landing = new Audio("landing.mp3");
   static eraseLine = new Audio("eraseLine.mp3");
+  static eraseLine2 = new Audio("eraseLIne2.mp3");
+  static eraseLine3 = new Audio("eraseLine3.mp3");
+  static eraseLine4 = new Audio("eraseLine4.mp3");
 }
 
 
@@ -243,6 +246,9 @@ class Field {
     }
     // ラインを消去する関数
     static clearLines() {
+      //消去ラインカウント
+      let count = 0;
+
       for (let y = Field.Row - 1; y >= 0; y--) {
         let lineFilled = true;
         for (let x = 0; x < Field.Col; x++) {
@@ -252,16 +258,37 @@ class Field {
           }
         }
         if (lineFilled) {
+          //消去ラインカウントを更新
+          count += 1;
           // ラインを消去
           field.splice(y, 1);
-          // 新しい空行を追加
-          field.unshift(new Array(Field.Col).fill("white"));
-          //消去音
-          music.eraseLine.currentTime = 0;
-          music.eraseLine.play();
-
         }
       }
+      // 新しい空行を追加
+      for(let i = 0; i < count; i++){
+        field.unshift(new Array(Field.Col).fill("white"));
+      }
+
+      //消去音
+      if(count==1){
+        music.eraseLine.currentTime = 0;
+        music.eraseLine.play();
+      }
+      else if(count==2){
+        music.eraseLine2.currentTime = 0;
+        music.eraseLine2.play();
+      }
+      else if(count==3){
+        music.eraseLine3.currentTime = 0;
+        music.eraseLine3.play();
+      }
+      else if(count>=4){
+        music.eraseLine4.currentTime = 0;
+        music.eraseLine4.play();
+      }
+      
+        
+      
       // ゲームオーバーチェック
       if (field[0].some(block => block !== "white")) {
         console.log("Game Over");
@@ -288,13 +315,12 @@ static moveDown() {
           const fieldX = tetro.x + x;
           const fieldY = tetro.y + y;
           field[fieldY][fieldX] = tetro.color;
-          //着地音
-          music.landing.currentTime = 0;
-          music.landing.play();
-
         }
       }
     }
+    
+    music.landing.currentTime = 0;
+    music.landing.play();//着地音
     Field.clearLines(); // ラインの消去
     tetro = Mino.createMino(); // 新しいミノを生成
   }
