@@ -10,6 +10,7 @@ class Helper {
     }
 }
 
+
 class music {
   static FeelGood = new Audio("Syn Cole - Feel Good [NCS Release].mp3");
   static rotate = new Audio("rotate.mp3");
@@ -22,6 +23,8 @@ class Block {
     //ブロック1マスのサイズ(px)をwindow.heightによってブロックのサイズを決定します
     static windowH = window.innerHeight;
     static size = (Block.windowH > 768) ? 28 : 26;
+
+
 }
 
 let color;
@@ -107,7 +110,7 @@ class Mino {
                     //座標に1ブロック描写
                     context.fillStyle = color;
                     context.fillRect(tetroX, tetroY, Block.size, Block.size);
-                    context.strokeStyle="rgb(0, 0, 0)";
+                    context.strokeStyle="rgb(0, 0, 0, 0.1)";
                     context.strokeRect(tetroX, tetroY, Block.size, Block.size);
                 }
             }
@@ -256,6 +259,7 @@ class Field {
           //消去音
           music.eraseLine.currentTime = 0;
           music.eraseLine.play();
+
         }
       }
       // ゲームオーバーチェック
@@ -372,7 +376,9 @@ function drawGame() {
   animationFrameId = requestAnimationFrame(drawGame);
 }
 
+
 //ゲームスタート
 music.FeelGood.volume = 0.2;
-//music.FeelGood.play();
+music.FeelGood.play();
 drawGame();
+
