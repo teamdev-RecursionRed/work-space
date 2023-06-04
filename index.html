@@ -18,10 +18,11 @@
 
     <!-- holdField -->
     <div class="col-4 h-100 m-5 p-5 d-flex flex-column justify-content-start align-items-center">
+      <button class="btn btn-info p-3" onclick="Game.start()"><h3>GAME START</h3></button>
       <h1 class="m-3">HOLD</h1>
       <canvas id="holdCanvas"></canvas>
       <!-- 説明 -->
-      <div class="w-100 m-5 p-5 d-flex flex-column align-items-center">
+      <div class="w-100 m-3 p-2 d-flex flex-column align-items-center">
         <h2>description</h2>
         <h4>← ↓ →: move</h4>
         <h4>↑  : rotate</h4>
@@ -34,7 +35,7 @@
 
     <!-- canvasField -->
     <div id="col-4 canvasField" class="h-100 d-flex flex-column justify-content-center align-items-center">
-      <h1 class="text-light mb-2">t e t r i s</h1>
+      <h1 class="text-light">t e t r i s</h1>
 
       <!-- minoが落ちてくるcanvas -->
       <canvas id="canvas"></canvas>

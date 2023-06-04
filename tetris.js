@@ -440,6 +440,14 @@ class Game {
         Field.decideCanvasScale();
         Field_next.decideCanvasScale();
     }
+
+    static start(){
+      //ゲームスタート
+      music.FeelGood.volume = 0.2;
+      music.FeelGood.play();
+
+      drawGame();
+    }
 }
 
 
@@ -523,10 +531,4 @@ function drawGame() {
   animationFrameId = requestAnimationFrame(drawGame);
 }
 
-
-//ゲームスタート
-music.FeelGood.volume = 0.2;
-music.FeelGood.play();
-
-drawGame();
 
