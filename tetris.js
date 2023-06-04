@@ -112,7 +112,7 @@ class Mino {
                     let tetroY = (this.y + y) * Block.size;
 
                     //座標に1ブロック描写
-                    context.fillStyle = color;
+                    context.fillStyle = this.color;
                     context.fillRect(tetroX, tetroY, Block.size, Block.size);
                     context.strokeStyle="rgb(0, 0, 0)";
                     context.strokeRect(tetroX, tetroY, Block.size, Block.size);
@@ -324,7 +324,7 @@ class Field {
         }
         
         music.landing.currentTime = 0;
-        music.landing.play();//着地音
+        //music.landing.play();//着地音
         Field.clearLines(); // ラインの消去
         tetro = next; 
         next = Mino.createMino(); // 新しいミノを生成
@@ -408,7 +408,7 @@ class Field_next {
     //前にあったminoを消す
     nextContext.clearRect(0, 0, holdCanvas.width, holdCanvas.height);
     //nextColor
-    let nextColor = tetro.color;
+    let nextColor = next.color;
 
     //minoの描写
     for (let y = 0; y < Mino.size; y++){
@@ -514,6 +514,7 @@ function drawGame() {
 
     Field.moveDown(); // ミノを一つ下に移動
     if (Field.clearLines()) {
+      //music.FeelGood.pause();
       return; // ゲームオーバー時は処理を終了
     }
 
