@@ -307,28 +307,28 @@ class Field {
       return false;
     }
 
-static moveDown() {
-  if (!tetro.checkCollision(0, 1)) {
-    tetro.move(0, 1);
-  } else {
-    // ミノが着地した場合
-    // フィールドにミノのブロックを追加
-    for (let y = 0; y < Mino.size; y++) {
-      for (let x = 0; x < Mino.size; x++) {
-        if (tetro.tetro[y][x]) {
-          const fieldX = tetro.x + x;
-          const fieldY = tetro.y + y;
-          field[fieldY][fieldX] = tetro.color;
+    static moveDown() {
+      if (!tetro.checkCollision(0, 1)) {
+        tetro.move(0, 1);
+      } else {
+        // ミノが着地した場合
+        // フィールドにミノのブロックを追加
+        for (let y = 0; y < Mino.size; y++) {
+          for (let x = 0; x < Mino.size; x++) {
+            if (tetro.tetro[y][x]) {
+              const fieldX = tetro.x + x;
+              const fieldY = tetro.y + y;
+              field[fieldY][fieldX] = tetro.color;
+            }
+          }
         }
+        
+        music.landing.currentTime = 0;
+        music.landing.play();//着地音
+        Field.clearLines(); // ラインの消去
+        tetro = Mino.createMino(); // 新しいミノを生成
       }
     }
-    
-    music.landing.currentTime = 0;
-    music.landing.play();//着地音
-    Field.clearLines(); // ラインの消去
-    tetro = Mino.createMino(); // 新しいミノを生成
-  }
-}
 }
 
 
@@ -370,6 +370,11 @@ document.addEventListener('keydown', (e) => {
       case 'ArrowDown':
         tetro.move(0, 1);
         tetro.draw();
+        break;
+      case ' ':
+        while (!tetro.checkCollision(0, 1))
+          tetro.move(0, 1);
+        Field.moveDown();
         break;
       default:
         break;
