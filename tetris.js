@@ -383,8 +383,6 @@ class Hold {
   }
 }
 
-// let hold = null;
-// let holdColor = "white";
 
 let nextCanvas = document.getElementById("nextCanvas");
 let nextContext = nextCanvas.getContext("2d");
@@ -400,25 +398,11 @@ class Field_next {
 
   /**canvasのwidthとheightを決める関数*/
   static decideCanvasScale(){
-      canvas_next.width = Field_next.canvasW;
-      canvas_next.height = Field_next.canvasH;
+      nextCanvas.width = Field_next.canvasW;
+      nextCanvas.height = Field_next.canvasH;
   }
 
-  /**field_nextを白く染める関数 */
-  static draw(){
-    for (let y = 0; y < Field_next.Row; y++){
-      for(let x = 0; x < Field_next.Col; x++){
-        //fieldの座標
-        let fieldX = x * Block.size;
-        let fieldY = y * Block.size;
-        //座標に1ブロック描写
-        context.fillStyle = "rgb(255, 255, 255, 0.7)";
-        context.fillRect(fieldX, fieldY, Block.size, Block.size);
-        context.strokeStyle="rgb(0, 0, 0, 0.1)";
-        context.strokeRect(fieldX, fieldY, Block.size, Block.size);
-      }
-    }
-  }
+
 }
 
 
@@ -427,6 +411,7 @@ class Game {
     /** fieldを初期化する関数*/
     static setField(){
         Field.decideCanvasScale();
+        Field_next.decideCanvasScale();
     }
 }
 
