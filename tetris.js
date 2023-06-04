@@ -324,7 +324,7 @@ class Field {
         }
         
         music.landing.currentTime = 0;
-        //music.landing.play();//着地音
+        music.landing.play();//着地音
         Field.clearLines(); // ラインの消去
         tetro = next; 
         next = Mino.createMino(); // 新しいミノを生成
@@ -526,7 +526,7 @@ function drawGame() {
 
 //ゲームスタート
 music.FeelGood.volume = 0.2;
-//music.FeelGood.play();
+music.FeelGood.play();
 
 drawGame();
 

@@ -21,28 +21,23 @@
       <h1 class="m-3">HOLD</h1>
       <canvas id="holdCanvas"></canvas>
       <!-- 説明 -->
-      <h1></h1>
+      <div class="w-100 m-5 p-5 d-flex flex-column align-items-center">
+        <h2>description</h2>
+        <h4>← ↓ →: move</h4>
+        <h4>↑  : rotate</h4>
+        <h4>space  : drop</h4>
+        <h4>h / H : hold</h4>
+      </div>
+      
     </div>
 
 
     <!-- canvasField -->
     <div id="col-4 canvasField" class="h-100 d-flex flex-column justify-content-center align-items-center">
-      <h2 class="text-light m-0">t e t r i s</h2>
+      <h1 class="text-light m-0">t e t r i s</h1>
 
       <!-- minoが落ちてくるcanvas -->
       <canvas id="canvas"></canvas>
-      
-      <!-- 移動ボタン -->
-      <div class="w-100 d-flex justify-content-around">
-        <!-- 右移動ボタン -->
-      
-        <!-- 右移動ボタンここまで -->
-        <!-- 回転ボタン -->
-        <button class="btn btn-primary" id="rotateButton">Rotate</button>
-        <button class="btn btn-info" id="moveToRight">to Right</button>
-        <button class="btn btn-warning" id="moveToLeft">to Left</button>
-        <!-- 回転ボタンここまで -->
-      </div>
     </div>
 
 
