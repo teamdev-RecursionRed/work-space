@@ -14,18 +14,20 @@
 
 <body>
   <!-- screen -->
-  <div class="container vh-100 d-flex justify-content-center align-items-center border border-warning">
+  <div class="container vh-100 d-flex justify-content-center align-items-center">
 
     <!-- holdField -->
-    <div class="col-4 h-100 m-5 p-5 d-flex flex-column justify-content-start align-items-center border">
+    <div class="col-4 h-100 m-5 p-5 d-flex flex-column justify-content-start align-items-center">
       <h1 class="m-3">HOLD</h1>
       <canvas id="holdCanvas"></canvas>
+      <!-- 説明 -->
+      <h1></h1>
     </div>
 
 
     <!-- canvasField -->
-    <div id="col-4 canvasField" class="h-100 d-flex flex-column justify-content-center align-items-center border border-danger">
-      <h2 class="text-light m-0 border">t e t r i s</h2>
+    <div id="col-4 canvasField" class="h-100 d-flex flex-column justify-content-center align-items-center">
+      <h2 class="text-light m-0">t e t r i s</h2>
 
       <!-- minoが落ちてくるcanvas -->
       <canvas id="canvas"></canvas>
@@ -45,13 +47,14 @@
 
 
     <!-- scoreField -->
-    <div class="col-4 h-100 m-5 p-5 d-flex flex-column justify-content-start align-items-center border border-info">
+    <div class="col-4 h-100 m-5 p-5 d-flex flex-column justify-content-start align-items-center">
       <!-- score -->
       <h1 class="m-3">SCORE</h1>
       <h2 class="scoreBoard w-100 py-2 rounded text-center"></h2>
 
       <!-- next -->
       <h1 class="m-3">next</h1>
+      <canvas id="nextCanvas"></canvas>
     </div>
 
   </div>

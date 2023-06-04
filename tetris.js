@@ -19,6 +19,7 @@ class music {
   static eraseLine2 = new Audio("eraseLIne2.mp3");
   static eraseLine3 = new Audio("eraseLine3.mp3");
   static eraseLine4 = new Audio("eraseLine4.mp3");
+  static hold = new Audio("hold.mp3");
 }
 
 
@@ -111,7 +112,7 @@ class Mino {
                     let tetroY = (this.y + y) * Block.size;
 
                     //座標に1ブロック描写
-                    context.fillStyle = color;
+                    context.fillStyle = this.color;
                     context.fillRect(tetroX, tetroY, Block.size, Block.size);
                     context.strokeStyle="rgb(0, 0, 0)";
                     context.strokeRect(tetroX, tetroY, Block.size, Block.size);
@@ -272,22 +273,22 @@ class Field {
       if(count==1){
         music.eraseLine.currentTime = 0;
         music.eraseLine.play();
-        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 10;
+        scoreDOM.innerHTML = Math.floor(parseInt(scoreDOM.innerHTML, 10) + 100*1.0);
       }
       else if(count==2){
         music.eraseLine2.currentTime = 0;
         music.eraseLine2.play();
-        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 20;
+        scoreDOM.innerHTML = Math.floor(parseInt(scoreDOM.innerHTML, 10) + 200*1.1);
       }
       else if(count==3){
         music.eraseLine3.currentTime = 0;
         music.eraseLine3.play();
-        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 30;
+        scoreDOM.innerHTML = Math.floor(parseInt(scoreDOM.innerHTML, 10) + 300*1.3);
       }
       else if(count>=4){
         music.eraseLine4.currentTime = 0;
         music.eraseLine4.play();
-        scoreDOM.innerHTML = parseInt(scoreDOM.innerHTML, 10) + 10 * count;
+        scoreDOM.innerHTML = Math.floor(parseInt(scoreDOM.innerHTML, 10) + (100 * count)*1.5);
       }
       
         
@@ -323,9 +324,11 @@ class Field {
         }
         
         music.landing.currentTime = 0;
-        music.landing.play();//着地音
+        //music.landing.play();//着地音
         Field.clearLines(); // ラインの消去
-        tetro = Mino.createMino(); // 新しいミノを生成
+        tetro = next; 
+        next = Mino.createMino(); // 新しいミノを生成
+        Field_next.draw();
       }
     }
 }
@@ -382,10 +385,60 @@ class Hold {
   }
 }
 
+
+let nextCanvas = document.getElementById("nextCanvas");
+let nextContext = nextCanvas.getContext("2d");
+
+class Field_next {
+  //col(列：横に何個入るか), row(行：縦に何個入るか), colはminoの中心計算より偶数が望ましい
+  static Col = 4;
+  static Row = 4;
+
+  //canvasの長さ = 行の長さ(列の長さ) * 1ブロックの大きさ
+  static canvasW = Field_next.Col * Block.size;
+  static canvasH = Field_next.Row * Block.size;
+
+  /**canvasのwidthとheightを決める関数*/
+  static decideCanvasScale(){
+      nextCanvas.width = Field_next.canvasW;
+      nextCanvas.height = Field_next.canvasH;
+  }
+
+  static draw(){
+    //前にあったminoを消す
+    nextContext.clearRect(0, 0, holdCanvas.width, holdCanvas.height);
+    //nextColor
+    let nextColor = next.color;
+
+    //minoの描写
+    for (let y = 0; y < Mino.size; y++){
+      for(let x = 0; x < Mino.size; x++){
+
+        if(next.tetro[y][x]==1){
+          //tetorominoの1ブロックの座標
+          let tetroX = x * Block.size;
+          let tetroY = y * Block.size;
+
+          //座標に1ブロック描写
+          nextContext.fillStyle = nextColor;
+          nextContext.fillRect(tetroX, tetroY, Block.size, Block.size);
+          nextContext.strokeStyle="rgb(0, 0, 0)";
+          nextContext.strokeRect(tetroX, tetroY, Block.size, Block.size);
+        }
+      }
+    }
+  }
+
+
+}
+
+
+
 class Game {
     /** fieldを初期化する関数*/
     static setField(){
         Field.decideCanvasScale();
+        Field_next.decideCanvasScale();
     }
 }
 
@@ -398,6 +451,8 @@ let field = Field.makeField();
 
 //1.mino生成
 let tetro = Mino.createMino();
+let next = Mino.createMino();
+Field_next.draw();
 tetro.draw();
 //キーボードの矢印キー入力に応じてミノの移動や回転を制御
 document.addEventListener('keydown', (e) => {
@@ -423,11 +478,13 @@ document.addEventListener('keydown', (e) => {
       case 'h':
       case 'H':
         Hold.hold();
+        music.hold.play();
         break;
       case ' ':
         while (!tetro.checkCollision(0, 1))
           tetro.move(0, 1);
         Field.moveDown();
+        music.landing.play();
         break;
       default:
         break;
@@ -457,6 +514,7 @@ function drawGame() {
 
     Field.moveDown(); // ミノを一つ下に移動
     if (Field.clearLines()) {
+      //music.FeelGood.pause();
       return; // ゲームオーバー時は処理を終了
     }
 
@@ -468,6 +526,7 @@ function drawGame() {
 
 //ゲームスタート
 music.FeelGood.volume = 0.2;
-music.FeelGood.play();
+//music.FeelGood.play();
+
 drawGame();
 
